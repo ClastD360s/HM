@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel Magüipi — El Edén del Pacífico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --deep:#0f3b5e;--navy:#13365f;--ocean:#1a6fa0;--teal:#3aafa9;--teal-light:#5ec4be;
+  --orange:#e8642c;--sunset:#f5a623;--sunset-light:#fcc564;
+  --cream:#fef8ef;--sand:#fdf0dc;--white:#fff;--dark:#0b2a42;--muted:#5a8298;
+  --display:'Libre Baskerville',Georgia,serif;--body:'Outfit',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--body);color:var(--dark);background:var(--cream);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block;background:var(--deep)}
+a{text-decoration:none;color:inherit}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 0;transition:background .4s,padding .4s,box-shadow .4s}
+.nav.scrolled{background:rgba(15,59,94,.97);backdrop-filter:blur(16px);padding:10px 0;box-shadow:0 2px 30px rgba(0,0,0,.15)}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-img{width:40px;height:40px;border-radius:50%;overflow:hidden}
+.logo-img img{width:100%;height:100%;object-fit:cover;background:transparent}
+.logo-name{font-family:var(--display);font-size:1.3rem;font-weight:700;color:var(--white)}
+.logo-sub{font-size:.65rem;color:var(--teal-light);letter-spacing:.12em;text-transform:uppercase;font-weight:500}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:.85rem;font-weight:500;color:rgba(255,255,255,.75);transition:color .3s}
+.nav-links a:hover{color:var(--white)}
+.nav-btn{background:var(--orange);color:var(--white);padding:10px 24px;border-radius:50px;font-weight:600;font-size:.82rem;transition:background .3s,transform .3s;border:none;cursor:pointer;display:inline-block}
+.nav-btn:hover{background:var(--sunset);transform:translateY(-1px)}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;z-index:101}
+.burger span{width:24px;height:2px;background:var(--white);border-radius:2px;transition:all .3s}
+.burger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+.mob-menu{position:fixed;inset:0;background:linear-gradient(160deg,var(--deep),var(--navy));z-index:99;display:none;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s;overflow-y:auto}
+.mob-menu.open{opacity:1;visibility:visible}
+.mob-inner{display:flex;flex-direction:column;min-height:100%;padding:100px 28px 40px}
+.mob-nav{flex:1;display:flex;flex-direction:column;gap:4px}
+.mob-nav a{font-family:var(--display);font-size:1.5rem;color:rgba(255,255,255,.85);padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;transition:color .3s,padding-left .3s}
+.mob-nav a:hover{color:var(--sunset);padding-left:10px}
+.mob-nav a::after{content:'→';font-size:.9rem;color:var(--teal);opacity:0;transition:opacity .3s}
+.mob-nav a:hover::after{opacity:1}
+.mob-cta{margin-top:24px}
+.mob-cta .nav-btn{display:block;width:100%;text-align:center;padding:16px;font-size:1rem}
+.mob-footer{margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:10px}
+.mob-footer a{font-size:.85rem;color:rgba(255,255,255,.5);transition:color .3s}
+.mob-footer a:hover{color:var(--white)}
+.mob-socials{display:flex;gap:10px;margin-top:8px}
+.mob-socials a{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:rgba(255,255,255,.6);transition:background .3s,color .3s}
+.mob-socials a:hover{background:var(--orange);color:var(--white)}
+
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;background:var(--deep);overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(160deg,rgba(15,59,94,.78),rgba(11,42,66,.5)),url('https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=1920&q=80') center/cover no-repeat}
+.hero-fade{position:absolute;bottom:0;left:0;right:0;height:180px;background:linear-gradient(to top,var(--cream),transparent);z-index:2}
+.hero-content{position:relative;z-index:3;padding:140px 0 160px;max-width:680px}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(58,175,169,.15);border:1px solid rgba(58,175,169,.25);padding:7px 18px;border-radius:50px;font-size:.75rem;font-weight:500;color:var(--teal-light);letter-spacing:.06em;margin-bottom:24px}
+.hero h1{font-family:var(--display);font-size:clamp(2.6rem,6.5vw,4.8rem);font-weight:700;color:var(--white);line-height:1.1;margin-bottom:20px}
+.hero h1 em{font-style:italic;color:var(--sunset)}
+.hero p{font-size:clamp(1rem,2vw,1.25rem);color:rgba(255,255,255,.7);line-height:1.65;margin-bottom:36px;max-width:520px}
+.hero-btns{display:flex;flex-wrap:wrap;gap:14px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:15px 32px;border-radius:50px;font-family:var(--body);font-size:.88rem;font-weight:600;cursor:pointer;border:none;transition:all .35s}
+.btn-main{background:var(--orange);color:var(--white)}
+.btn-main:hover{background:var(--sunset);transform:translateY(-2px);box-shadow:0 10px 30px rgba(232,100,44,.3)}
+.btn-ghost{background:transparent;color:var(--white);border:1.5px solid rgba(255,255,255,.3)}
+.btn-ghost:hover{background:var(--white);color:var(--deep);border-color:var(--white)}
+.btn-dark{background:var(--deep);color:var(--white)}
+.btn-dark:hover{background:var(--navy);transform:translateY(-2px);box-shadow:0 10px 30px rgba(15,59,94,.25)}
+
+.features{position:relative;z-index:4;margin-top:-50px;margin-bottom:70px}
+.features-grid{background:var(--white);border-radius:18px;padding:32px 40px;display:grid;grid-template-columns:repeat(4,1fr);gap:28px;box-shadow:0 16px 60px rgba(0,0,0,.07)}
+.feat{display:flex;align-items:center;gap:14px}
+.feat-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,rgba(58,175,169,.12),rgba(58,175,169,.25));display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.feat h4{font-size:.85rem;font-weight:600}
+.feat p{font-size:.73rem;color:var(--muted);margin-top:1px}
+
+.label{font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.title{font-family:var(--display);font-size:clamp(1.8rem,4.5vw,3.2rem);font-weight:700;line-height:1.15;color:var(--deep)}
+.title.light{color:var(--white)}
+.desc{font-size:clamp(1rem,1.8vw,1.15rem);color:var(--muted);line-height:1.7;max-width:540px}
+
+.about{padding:90px 0;overflow:hidden}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.about-imgs{position:relative;display:grid;grid-template-columns:1.2fr 1fr;gap:12px}
+.about-img1{border-radius:20px;overflow:hidden;height:380px;grid-column:span 2;box-shadow:0 20px 50px rgba(0,0,0,.1)}
+.about-img1 img,.about-img2 img{width:100%;height:100%;object-fit:cover}
+.about-img2{border-radius:16px;overflow:hidden;height:200px;box-shadow:0 14px 40px rgba(0,0,0,.08)}
+.about-badge{border-radius:16px;background:linear-gradient(135deg,var(--orange),var(--sunset));display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--white);padding:20px;box-shadow:0 10px 30px rgba(232,100,44,.3)}
+.about-badge span:first-child{font-size:1.6rem;margin-bottom:4px}
+.about-badge span:last-child{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.about-text .desc{margin:16px 0 28px}
+.highlights{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+.hi{display:flex;gap:10px;align-items:flex-start}
+.hi-icon{width:34px;height:34px;border-radius:10px;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.hi h5{font-size:.84rem;font-weight:600;margin-bottom:1px}
+.hi p{font-size:.74rem;color:var(--muted);line-height:1.45}
+
+.rooms{padding:90px 0;background:var(--white)}
+.rooms-head{text-align:center;margin-bottom:50px}
+.rooms-head .desc{margin:12px auto 0}
+.rooms-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.room{border-radius:18px;overflow:hidden;background:var(--cream);transition:transform .45s,box-shadow .45s}
+.room:hover{transform:translateY(-6px);box-shadow:0 24px 50px rgba(0,0,0,.09)}
+.room-img{height:240px;overflow:hidden;position:relative;background:var(--navy)}
+.room-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.room:hover .room-img img{transform:scale(1.06)}
+.room-tag{position:absolute;top:14px;left:14px;background:linear-gradient(135deg,var(--deep),var(--teal));color:var(--white);padding:5px 13px;border-radius:50px;font-size:.7rem;font-weight:600}
+.room-body{padding:24px}
+.room-body h3{font-family:var(--display);font-size:1.2rem;margin-bottom:6px}
+.room-body>p{font-size:.82rem;color:var(--muted);line-height:1.55;margin-bottom:16px}
+.room-amen{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.room-amen span{font-size:.7rem;padding:5px 10px;background:var(--white);border-radius:50px;color:var(--muted);font-weight:500}
+.room-foot{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid rgba(0,0,0,.05)}
+.room-price{font-family:var(--display);font-size:1.25rem;font-weight:700;color:var(--deep)}
+.room-price small{font-family:var(--body);font-size:.72rem;font-weight:400;color:var(--muted)}
+.room-book{padding:9px 20px;font-size:.78rem}
+
+.exp{padding:90px 0}
+.exp-head{text-align:center;margin-bottom:50px}
+.exp-head .desc{margin:12px auto 0}
+.exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.exp-card{position:relative;height:320px;border-radius:20px;overflow:hidden;cursor:pointer;background:var(--navy)}
+.exp-card img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.exp-card:hover img{transform:scale(1.06)}
+.exp-over{position:absolute;inset:0;background:linear-gradient(to top,rgba(11,42,66,.88) 0%,transparent 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:30px}
+.exp-over h3{font-family:var(--display);font-size:1.4rem;color:var(--white);margin-bottom:6px}
+.exp-over p{font-size:.84rem;color:rgba(255,255,255,.65);line-height:1.5}
+
+.counter{padding:70px 0;background:linear-gradient(135deg,rgba(15,59,94,.88),rgba(58,175,169,.55)),url('https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=1920&q=80') center/cover no-repeat}
+.counter-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;text-align:center}
+.counter-num{font-family:var(--display);font-size:clamp(2.2rem,5vw,3.5rem);font-weight:700;color:var(--sunset);line-height:1;margin-bottom:6px}
+.counter-lbl{font-size:.8rem;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:.1em;font-weight:500}
+
+.gallery{padding:90px 0;background:var(--deep)}
+.gallery-head{text-align:center;margin-bottom:50px}
+.gallery-head .label{color:var(--sunset)}
+.gallery-head .desc{color:rgba(255,255,255,.55);margin:12px auto 0}
+.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:200px 200px;gap:12px}
+.gal{border-radius:14px;overflow:hidden;position:relative;background:var(--navy)}
+.gal img{width:100%;height:100%;object-fit:cover;transition:transform .45s}
+.gal:hover img{transform:scale(1.08)}
+.gal:first-child{grid-column:span 2;grid-row:span 2}
+
+.testi{padding:90px 0}
+.testi-head{text-align:center;margin-bottom:50px}
+.testi-head .desc{margin:12px auto 0}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.tcard{background:var(--white);border-radius:18px;padding:30px;box-shadow:0 6px 30px rgba(0,0,0,.04);transition:transform .35s,box-shadow .35s}
+.tcard:hover{transform:translateY(-4px);box-shadow:0 14px 50px rgba(0,0,0,.07)}
+.tcard-stars{color:var(--sunset);font-size:.85rem;letter-spacing:2px;margin-bottom:14px}
+.tcard-text{font-family:var(--display);font-size:1rem;font-style:italic;line-height:1.65;color:var(--dark);margin-bottom:20px}
+.tcard-author{display:flex;align-items:center;gap:10px}
+.tcard-avatar{width:40px;height:40px;border-radius:50%;background:var(--sand);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:var(--deep)}
+.tcard-name h5{font-size:.84rem;font-weight:600}
+.tcard-name p{font-size:.72rem;color:var(--muted)}
+
+.cta{padding:120px 0;text-align:center;background:linear-gradient(135deg,rgba(15,59,94,.9),rgba(19,54,95,.8)),url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80') center/cover no-repeat}
+.cta .label{color:var(--sunset)}
+.cta .title{color:var(--white);max-width:650px;margin:0 auto 16px}
+.cta .desc{color:rgba(255,255,255,.65);margin:0 auto 36px}
+.cta-btns{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+
+.contact{padding:90px 0;background:var(--white)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:start}
+.contact-cards{display:grid;gap:16px;margin-top:28px}
+.ccard{display:flex;gap:14px;padding:20px;background:var(--cream);border-radius:14px;transition:transform .3s}
+.ccard:hover{transform:translateX(4px)}
+.ccard-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--deep),var(--teal));color:var(--white);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.ccard h5{font-size:.85rem;font-weight:600;margin-bottom:3px}
+.ccard p{font-size:.82rem;color:var(--muted);line-height:1.5}
+.cform{background:var(--cream);border-radius:20px;padding:36px}
+.cform h3{font-family:var(--display);font-size:1.35rem;margin-bottom:22px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.fgroup{margin-bottom:14px}
+.fgroup label{display:block;font-size:.8rem;font-weight:500;margin-bottom:5px}
+.fgroup input,.fgroup select,.fgroup textarea{width:100%;padding:13px 16px;border:1.5px solid rgba(0,0,0,.07);border-radius:11px;font-family:var(--body);font-size:.88rem;background:var(--white);color:var(--dark);outline:none;transition:border-color .3s,box-shadow .3s}
+.fgroup input:focus,.fgroup select:focus,.fgroup textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(58,175,169,.12)}
+.fgroup textarea{resize:vertical;min-height:110px}
+.fsubmit{width:100%;justify-content:center;margin-top:6px}
+
+.footer{background:var(--deep);padding:70px 0 0;color:var(--white)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:40px;margin-bottom:50px}
+.footer-brand p{font-size:.9rem;color:rgba(255,255,255,.55);line-height:1.65;margin:14px 0 20px}
+.footer-socials{display:flex;gap:10px}
+.footer-socials a{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.85rem;color:rgba(255,255,255,.6);transition:background .3s}
+.footer-socials a:hover{background:var(--orange)}
+.footer h4{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--teal-light);margin-bottom:16px}
+.footer-links a{display:block;font-size:.85rem;color:rgba(255,255,255,.55);padding:5px 0;transition:color .3s,padding-left .3s}
+.footer-links a:hover{color:var(--white);padding-left:6px}
+.fnews p{font-size:.82rem;color:rgba(255,255,255,.55);margin-bottom:14px}
+.fnews-form{display:flex;gap:8px}
+.fnews-form input{flex:1;padding:11px 16px;border-radius:50px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--white);font-family:var(--body);font-size:.84rem;outline:none}
+.fnews-form input::placeholder{color:rgba(255,255,255,.35)}
+.fnews-form button{padding:11px 22px;border-radius:50px;border:none;background:var(--orange);color:var(--white);font-family:var(--body);font-weight:600;font-size:.82rem;cursor:pointer;transition:background .3s}
+.fnews-form button:hover{background:var(--sunset)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding:20px 0;display:flex;justify-content:space-between;align-items:center;font-size:.76rem;color:rgba(255,255,255,.35)}
+
+.wa{position:fixed;bottom:24px;right:24px;z-index:90;width:56px;height:56px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 22px rgba(37,211,102,.4);transition:transform .3s;font-size:1.5rem;color:#fff}
+.wa:hover{transform:scale(1.1)}
+
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}
+.reveal.vis{opacity:1;transform:translateY(0)}
+
+@media(max-width:1024px){
+  .features-grid{grid-template-columns:repeat(2,1fr);padding:24px 28px}
+  .rooms-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:repeat(2,1fr)}
+  .counter-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .nav-links{display:none}.burger{display:flex}.mob-menu{display:flex}
+  .nav{padding:14px 0}.logo-img{width:34px;height:34px}.logo-name{font-size:1.1rem}
+  .hero{min-height:100svh}.hero-content{padding:120px 0 140px}
+  .hero h1{font-size:clamp(2rem,7.5vw,2.8rem)}.hero p{font-size:.95rem}.hero-tag{font-size:.68rem;padding:5px 14px}
+  .features{margin-top:-36px;margin-bottom:40px}.features-grid{grid-template-columns:1fr 1fr;gap:14px;padding:18px}
+  .feat-icon{width:40px;height:40px;font-size:1.1rem}.feat h4{font-size:.8rem}
+  .about{padding:60px 0}.about-grid{grid-template-columns:1fr;gap:32px}
+  .about-imgs{grid-template-columns:1fr 1fr;gap:10px}.about-img1{height:220px}.about-img2{height:170px}
+  .about-badge{padding:16px}.highlights{grid-template-columns:1fr;gap:12px}
+  .rooms{padding:60px 0}.rooms-grid{grid-template-columns:1fr;gap:18px}.room-img{height:210px}
+  .exp{padding:60px 0}.exp-grid{grid-template-columns:1fr;gap:16px}.exp-card{height:260px}
+  .counter{padding:50px 0}.counter-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .gallery{padding:60px 0}.gallery-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:180px 150px 150px;gap:10px}
+  .gal:first-child{grid-column:span 2}
+  .testi{padding:60px 0}.testi-grid{grid-template-columns:1fr;gap:16px}
+  .cta{padding:70px 0}.contact{padding:60px 0}.contact-grid{grid-template-columns:1fr;gap:32px}
+  .frow{grid-template-columns:1fr}.cform{padding:24px}
+  .footer{padding:50px 0 0}.footer-grid{grid-template-columns:1fr;gap:24px}
+  .footer-bottom{flex-direction:column;gap:8px;text-align:center}.fnews-form{flex-direction:column}
+  .wa{width:52px;height:52px;bottom:20px;right:20px;font-size:1.4rem}
+}
+@media(max-width:480px){
+  .wrap{padding:0 16px}.hero-content{padding:110px 0 120px}
+  .hero-btns{flex-direction:column}.hero-btns .btn{width:100%;justify-content:center}
+  .features-grid{grid-template-columns:1fr}.about-imgs{grid-template-columns:1fr}.about-img1{grid-column:span 1}
+  .gallery-grid{grid-template-columns:1fr;grid-template-rows:auto}.gal{height:190px}
+  .gal:first-child{grid-column:span 1;grid-row:span 1;height:220px}
+  .counter-grid{grid-template-columns:1fr 1fr}
+  .mob-inner{padding:90px 20px 32px}.mob-nav a{font-size:1.3rem}
+}
+@media(max-width:360px){.hero h1{font-size:1.65rem}.mob-nav a{font-size:1.15rem}.title{font-size:1.4rem}}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  .footer-bottom{padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+  .wa{bottom:calc(20px + env(safe-area-inset-bottom))}
+  .mob-inner{padding-bottom:calc(40px + env(safe-area-inset-bottom))}
+}
+</style>
+</head>
+<body>
+<nav class="nav" id="nav"><div class="wrap">
+  <a href="#" class="logo"><div class="logo-img"><img src="logo-maguipi.png" alt="Magüipi"></div><div><div class="logo-name">Magüipi</div><div class="logo-sub">El Edén del Pacífico</div></div></a>
+  <div class="nav-links"><a href="#inicio">Inicio</a><a href="#nosotros">Nosotros</a><a href="#habitaciones">Habitaciones</a><a href="#experiencias">Experiencias</a><a href="#galeria">Galería</a><a href="#contacto">Contacto</a><a href="#reservar" class="nav-btn">Reservar</a></div>
+  <div class="burger" id="burger"><span></span><span></span><span></span></div>
+</div></nav>
+
+<div class="mob-menu" id="mobMenu"><div class="mob-inner">
+  <nav class="mob-nav"><a href="#inicio" class="mlink">Inicio</a><a href="#nosotros" class="mlink">Nosotros</a><a href="#habitaciones" class="mlink">Habitaciones</a><a href="#experiencias" class="mlink">Experiencias</a><a href="#galeria" class="mlink">Galería</a><a href="#contacto" class="mlink">Contacto</a></nav>
+  <div class="mob-cta"><a href="#reservar" class="nav-btn mlink">Reservar Ahora</a></div>
+  <div class="mob-footer"><a href="tel:+573116123002">📞 +57 311 612 3002</a><a href="mailto:cuentasmaguipi@gmail.com">✉️ cuentasmaguipi@gmail.com</a>
+    <div class="mob-socials"><a href="https://www.facebook.com/maguipieledendelpacifico/" target="_blank">f</a><a href="https://www.instagram.com/hotel_maguipi/" target="_blank">ig</a><a href="https://wa.me/573116123002" target="_blank">wa</a></div>
+  </div>
+</div></div>
+
+<section class="hero" id="inicio">
+  <div class="hero-bg"></div><div class="hero-fade"></div>
+  <div class="wrap hero-content">
+    <div class="hero-tag">🏖️ Certificación Bandera Azul · Buenaventura</div>
+    <h1>Descubre el <em>Edén</em> del Pacífico Colombiano</h1>
+    <p>Un refugio paradisíaco en Punta San Pedro, donde la selva tropical se encuentra con las aguas del Pacífico.</p>
+    <div class="hero-btns"><a href="#reservar" class="btn btn-main">Reservar Ahora →</a><a href="#experiencias" class="btn btn-ghost">Explorar Experiencias</a></div>
+  </div>
+</section>
+
+<section class="features"><div class="wrap"><div class="features-grid reveal">
+  <div class="feat"><div class="feat-icon">🏊</div><div><h4>Piscinas Naturales</h4><p>Agua dulce cristalina</p></div></div>
+  <div class="feat"><div class="feat-icon">🐋</div><div><h4>Avistamiento</h4><p>Ballenas jorobadas</p></div></div>
+  <div class="feat"><div class="feat-icon">🌿</div><div><h4>Senderos Ecológicos</h4><p>2 rutas paradisíacas</p></div></div>
+  <div class="feat"><div class="feat-icon">🍽️</div><div><h4>Gastronomía</h4><p>Cocina del Pacífico</p></div></div>
+</div></div></section>
+
+<section class="about" id="nosotros"><div class="wrap"><div class="about-grid">
+  <div class="about-imgs reveal">
+    <div class="about-img1"><img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=80" alt="Hotel"></div>
+    <div class="about-img2"><img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80" alt="Playa"></div>
+    <div class="about-badge"><span>🏅</span><span>Blue Flag</span></div>
+  </div>
+  <div class="about-text reveal">
+    <div class="label">Sobre Nosotros</div>
+    <h2 class="title">Donde la naturaleza se convierte en experiencia</h2>
+    <p class="desc">Ubicado a solo 30 minutos en lancha desde Buenaventura, Hotel Magüipi te ofrece un escape único al corazón del Pacífico colombiano, con playas exclusivas y la riqueza de la cultura afrocolombiana.</p>
+    <div class="highlights">
+      <div class="hi"><div class="hi-icon">📍</div><div><h5>Ubicación Privilegiada</h5><p>Punta San Pedro, a 30 min del muelle</p></div></div>
+      <div class="hi"><div class="hi-icon">🏖️</div><div><h5>Playas Exclusivas</h5><p>2 playas privadas con senderos</p></div></div>
+      <div class="hi"><div class="hi-icon">💆</div><div><h5>Spa & Bienestar</h5><p>Relájate con nuestros tratamientos</p></div></div>
+      <div class="hi"><div class="hi-icon">🎶</div><div><h5>Cultura Viva</h5><p>Discoteca, bar y entretenimiento</p></div></div>
+    </div>
+    <a href="#habitaciones" class="btn btn-dark">Conocer Habitaciones →</a>
+  </div>
+</div></div></section>
+
+<section class="rooms" id="habitaciones"><div class="wrap">
+  <div class="rooms-head reveal"><div class="label">Alojamiento</div><h2 class="title">Nuestras Habitaciones</h2><p class="desc">58 habitaciones diseñadas para tu descanso, todas con baño privado y vistas al Pacífico.</p></div>
+  <div class="rooms-grid">
+    <div class="room reveal"><div class="room-img"><img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&q=80" alt="Estándar"><span class="room-tag">Popular</span></div><div class="room-body"><h3>Habitación Estándar</h3><p>Acomodación cuádruple con baño privado y ventilador. Vista al interior del hotel.</p><div class="room-amen"><span>👥 4 personas</span><span>🚿 Baño privado</span><span>🌀 Ventilador</span></div><div class="room-foot"><div class="room-price">Consultar <small>/ noche</small></div><a href="#contacto" class="btn btn-main room-book">Reservar</a></div></div></div>
+    <div class="room reveal"><div class="room-img"><img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80" alt="Vista al Mar"><span class="room-tag">Vista al Mar</span></div><div class="room-body"><h3>Suite Vista al Mar</h3><p>Acomodación triple con aire acondicionado y vista espectacular al océano Pacífico.</p><div class="room-amen"><span>👥 3 personas</span><span>❄️ A/C</span><span>🌊 Vista al mar</span></div><div class="room-foot"><div class="room-price">Consultar <small>/ noche</small></div><a href="#contacto" class="btn btn-main room-book">Reservar</a></div></div></div>
+    <div class="room reveal"><div class="room-img"><img src="https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=600&q=80" alt="VIP"><span class="room-tag">Exclusiva</span></div><div class="room-body"><h3>Cabaña VIP</h3><p>Exclusiva cabaña con 4 habitaciones, sala comedor, zona de asados y mirador panorámico.</p><div class="room-amen"><span>👥 15 personas</span><span>❄️ A/C</span><span>📺 TV Satelital</span></div><div class="room-foot"><div class="room-price">Consultar <small>/ noche</small></div><a href="#contacto" class="btn btn-main room-book">Reservar</a></div></div></div>
+  </div>
+</div></section>
+
+<section class="exp" id="experiencias"><div class="wrap">
+  <div class="exp-head reveal"><div class="label">Experiencias</div><h2 class="title">Vive el Pacífico</h2><p class="desc">Actividades inolvidables rodeado de la biodiversidad y cultura del Pacífico colombiano.</p></div>
+  <div class="exp-grid">
+    <div class="exp-card reveal"><img src="https://images.unsplash.com/photo-1568430462989-44163eb1752f?w=800&q=80" alt="Ballenas"><div class="exp-over"><h3>🐋 Avistamiento de Ballenas</h3><p>Vive la magia de las ballenas jorobadas en su migración anual.</p></div></div>
+    <div class="exp-card reveal"><img src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&q=80" alt="Senderos"><div class="exp-over"><h3>🌿 Senderos Ecológicos</h3><p>Dos rutas que te llevan a playas paradisíacas por la selva tropical.</p></div></div>
+    <div class="exp-card reveal"><img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80" alt="Playas"><div class="exp-over"><h3>🏖️ Playas Exclusivas</h3><p>Playas vírgenes con certificación Bandera Azul.</p></div></div>
+    <div class="exp-card reveal"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80" alt="Gastronomía"><div class="exp-over"><h3>🍽️ Gastronomía del Pacífico</h3><p>Sabores auténticos de la cocina afrocolombiana y mariscos frescos.</p></div></div>
+  </div>
+</div></section>
+
+<section class="counter"><div class="wrap"><div class="counter-grid">
+  <div class="reveal"><div class="counter-num" data-count="58">0</div><div class="counter-lbl">Habitaciones</div></div>
+  <div class="reveal"><div class="counter-num" data-count="2">0</div><div class="counter-lbl">Playas Exclusivas</div></div>
+  <div class="reveal"><div class="counter-num" data-count="980">0</div><div class="counter-lbl">Huéspedes Felices</div></div>
+  <div class="reveal"><div class="counter-num" data-count="30">0</div><div class="counter-lbl">Min de Buenaventura</div></div>
+</div></div></section>
+
+<section class="gallery" id="galeria"><div class="wrap">
+  <div class="gallery-head reveal"><div class="label">Galería</div><h2 class="title light">Momentos en el Paraíso</h2><p class="desc">Captura la belleza natural que te espera en Hotel Magüipi.</p></div>
+  <div class="gallery-grid reveal">
+    <div class="gal"><img src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=800&q=80" alt="Atardecer"></div>
+    <div class="gal"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" alt="Playa"></div>
+    <div class="gal"><img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=600&q=80" alt="Piscina"></div>
+    <div class="gal"><img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80" alt="Naturaleza"></div>
+    <div class="gal"><img src="https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=600&q=80" alt="Cocina"></div>
+  </div>
+</div></section>
+
+<section class="testi" id="testimonios"><div class="wrap">
+  <div class="testi-head reveal"><div class="label">Testimonios</div><h2 class="title">Lo que dicen nuestros huéspedes</h2><p class="desc">Experiencias reales de quienes han vivido la magia del Pacífico.</p></div>
+  <div class="testi-grid">
+    <div class="tcard reveal"><div class="tcard-stars">★★★★★</div><p class="tcard-text">"Un hotel con instalaciones modernas y todas las comodidades. Las playas son un paraíso, muy seguro y el paisaje es espectacular."</p><div class="tcard-author"><div class="tcard-avatar">CM</div><div class="tcard-name"><h5>Carlos M.</h5><p>Cali, Colombia</p></div></div></div>
+    <div class="tcard reveal"><div class="tcard-stars">★★★★★</div><p class="tcard-text">"Muy cerca de Buenaventura, a solo 20 minutos en lancha. Las playas son limpias y el paisaje espectacular. Recomendado para familias."</p><div class="tcard-author"><div class="tcard-avatar">LP</div><div class="tcard-name"><h5>Laura P.</h5><p>Bogotá, Colombia</p></div></div></div>
+    <div class="tcard reveal"><div class="tcard-stars">★★★★☆</div><p class="tcard-text">"El avistamiento de ballenas fue una experiencia increíble. La comida del Pacífico es deliciosa y el hotel tiene buena ubicación."</p><div class="tcard-author"><div class="tcard-avatar">JR</div><div class="tcard-name"><h5>Jorge R.</h5><p>Medellín, Colombia</p></div></div></div>
+  </div>
+</div></section>
+
+<section class="cta" id="reservar"><div class="wrap reveal">
+  <div class="label">¿Listo para la aventura?</div>
+  <h2 class="title">Reserva tu escapada al Pacífico</h2>
+  <p class="desc">Planes desde 2 días con todo incluido: alojamiento, alimentación, actividades y transporte en lancha.</p>
+  <div class="cta-btns"><a href="https://wa.me/573116123002" target="_blank" class="btn btn-main">💬 WhatsApp Directo</a><a href="#contacto" class="btn btn-ghost">Enviar Consulta</a></div>
+</div></section>
+
+<section class="contact" id="contacto"><div class="wrap"><div class="contact-grid">
+  <div class="reveal">
+    <div class="label">Contacto</div><h2 class="title">Hablemos de tu próxima aventura</h2>
+    <div class="contact-cards">
+      <div class="ccard"><div class="ccard-icon">📍</div><div><h5>Ubicación</h5><p>Sector Rural, Punta San Pedro<br>Buenaventura, Valle del Cauca</p></div></div>
+      <div class="ccard"><div class="ccard-icon">📞</div><div><h5>Teléfono</h5><p>+57 311 612 3002</p></div></div>
+      <div class="ccard"><div class="ccard-icon">✉️</div><div><h5>Email</h5><p>cuentasmaguipi@gmail.com</p></div></div>
+      <div class="ccard"><div class="ccard-icon">🕐</div><div><h5>Horarios</h5><p>Check-in: 2:00 PM · Check-out: 12:00 PM</p></div></div>
+    </div>
+  </div>
+  <div class="cform reveal">
+    <h3>Envíanos tu consulta</h3>
+    <div class="frow"><div class="fgroup"><label>Nombre completo</label><input type="text" placeholder="Tu nombre"></div><div class="fgroup"><label>Teléfono</label><input type="tel" placeholder="+57 300 000 0000"></div></div>
+    <div class="fgroup"><label>Email</label><input type="email" placeholder="tu@email.com"></div>
+    <div class="frow"><div class="fgroup"><label>Fecha de llegada</label><input type="date"></div><div class="fgroup"><label>Huéspedes</label><select><option>1 - 2 personas</option><option>3 - 4 personas</option><option>5 - 6 personas</option><option>7 - 10 personas</option><option>11 - 15 personas</option></select></div></div>
+    <div class="fgroup"><label>Mensaje</label><textarea placeholder="Cuéntanos sobre tu viaje ideal..."></textarea></div>
+    <button class="btn btn-main fsubmit">Enviar Consulta →</button>
+  </div>
+</div></div></section>
+
+<footer class="footer"><div class="wrap">
+  <div class="footer-grid">
+    <div class="footer-brand"><a href="#" class="logo"><div class="logo-img"><img src="logo-maguipi.png" alt="Magüipi"></div><div><div class="logo-name">Magüipi</div><div class="logo-sub">El Edén del Pacífico</div></div></a><p>Un refugio paradisíaco en las costas del Pacífico colombiano, donde la naturaleza y la cultura se unen para crear experiencias inolvidables.</p><div class="footer-socials"><a href="https://www.facebook.com/maguipieledendelpacifico/" target="_blank">f</a><a href="https://www.instagram.com/hotel_maguipi/" target="_blank">ig</a><a href="https://wa.me/573116123002" target="_blank">wa</a></div></div>
+    <div><h4>Navegación</h4><div class="footer-links"><a href="#inicio">Inicio</a><a href="#nosotros">Nosotros</a><a href="#habitaciones">Habitaciones</a><a href="#experiencias">Experiencias</a><a href="#galeria">Galería</a></div></div>
+    <div><h4>Servicios</h4><div class="footer-links"><a href="#">Restaurante</a><a href="#">Piscinas</a><a href="#">Spa</a><a href="#">Tours</a><a href="#">Eventos</a></div></div>
+    <div class="fnews"><h4>Newsletter</h4><p>Recibe ofertas exclusivas y novedades en tu correo.</p><div class="fnews-form"><input type="email" placeholder="Tu correo electrónico"><button>Suscribir</button></div></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Hotel Magüipi. Todos los derechos reservados.</span><span>Buenaventura, Valle del Cauca, Colombia</span></div>
+</div></footer>
+
+<a href="https://wa.me/573116123002" target="_blank" class="wa" title="WhatsApp">💬</a>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50));
+const burger=document.getElementById('burger'),mob=document.getElementById('mobMenu');
+function closeMob(){burger.classList.remove('open');mob.classList.remove('open');document.body.style.overflow=''}
+burger.addEventListener('click',()=>{const o=mob.classList.contains('open');o?closeMob():(burger.classList.add('open'),mob.classList.add('open'),document.body.style.overflow='hidden')});
+document.querySelectorAll('.mlink').forEach(l=>l.addEventListener('click',closeMob));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMob()});
+window.addEventListener('resize',()=>{if(innerWidth>768)closeMob()});
+const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')})},{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){const t=document.querySelector(this.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}})});
+const nums=document.querySelectorAll('.counter-num[data-count]');let counted=false;
+const cobs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting&&!counted){counted=true;nums.forEach(n=>{const t=+n.dataset.count,d=1800,s=performance.now();function ease(t){return 1-Math.pow(1-t,4)}function tick(now){const p=Math.min((now-s)/d,1);n.textContent=Math.floor(ease(p)*t).toLocaleString();p<1?requestAnimationFrame(tick):n.textContent=t>=100?t.toLocaleString()+'+':t}requestAnimationFrame(tick)})}})},{threshold:.3});
+if(nums.length)cobs.observe(nums[0].closest('.counter'));
+</script>
+</body>
+</html>
